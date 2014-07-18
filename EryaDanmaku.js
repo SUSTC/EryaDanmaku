@@ -132,11 +132,12 @@ function initDanmaku() {
   //player.getPlaySecond();
   //player.playMovie();
 
+  var avDanmaku = AV.Object.extend("danmaku");
+
   Danmaku.prototype.loader = function (videoId, callback) {
     //reload
     var that = this;
-    var av_danmaku = AV.Object.extend("danmaku");
-    var query = new AV.Query(av_danmaku);
+    var query = new AV.Query(avDanmaku);
     query.equalTo("videoId", videoId);
     console.log('videoId', videoId);
     query.find({
@@ -152,7 +153,17 @@ function initDanmaku() {
   };
 
   Danmaku.prototype.postdata = function (data) {
-    console.log(data);
+    var that = this;
+    var av_danmaku = new avDanmaku();
+    data.videoId = this.ssid;
+    av_danmaku.save(data, {
+      success: function(av_danmaku) {
+        that.posttips(true);
+      },
+      error: function(av_danmaku, err) {
+        that.posttips(false);
+      }
+    });
   };
 
   danmaku = new Danmaku($('#eryaPlayer'), $('.danmakubar'), function () {

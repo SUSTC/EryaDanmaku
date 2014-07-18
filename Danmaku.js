@@ -57,22 +57,29 @@ Danmaku.prototype.postdata = function (cmsenddata) {
         data: cmsenddata,
         success: function (msg) {
             if (msg == '0') {
-                danmaku.toolbar.find("#danmaku-tips").css('color', '#7BCA1C').fadeIn().text('发送弹幕成功').delay(2000).fadeOut();
+                danmaku.posttips(true);
             } else {
-                danmaku.toolbar.find("#danmaku-tips").css('color', 'red').fadeIn().text('发送弹幕失败').delay(2000).fadeOut();
-            }
+                danmaku.posttips(false);
         },
         error: function () {
-            danmaku.toolbar.find("#danmaku-tips").css('color', 'red').fadeIn().text('发送弹幕失败').delay(2000).fadeOut();
+            danmaku.posttips(false);
         }
     });
+};
+
+Danmaku.prototype.posttips = function (succeed) {
+    if (succeed) {
+        this.toolbar.find("#danmaku-tips").css('color', '#7BCA1C').fadeIn().text('发送弹幕成功').delay(2000).fadeOut();
+    } else {
+        this.toolbar.find("#danmaku-tips").css('color', 'red').fadeIn().text('发送弹幕失败').delay(2000).fadeOut();
+    }
 };
 
 Danmaku.prototype.post = function () {
     var text = this.toolbar.find("#id_danmaku").val();
     if (text != '') {
         this.toolbar.find("#id_danmaku").val('');
-        var stime = new Date().getTime() - this.start + this.step * this.stepoffset;
+        var stime = this.playhead;
         var size = Number(this.toolbar.find("#danmaku-fontsize").val());
         var color = this.toolbar.find(".color_select").css("background-color");
         var mode = Number(this.toolbar.find("#danmaku-mode").val());
