@@ -8,6 +8,7 @@
 
 .black_background {
   height: 560px !important;
+  background-size: auto 560px;
 }
 
 /* 8.3.2 story show > danmakubar */
