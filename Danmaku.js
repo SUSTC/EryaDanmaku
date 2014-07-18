@@ -60,6 +60,7 @@ Danmaku.prototype.postdata = function (cmsenddata) {
                 danmaku.posttips(true);
             } else {
                 danmaku.posttips(false);
+            }
         },
         error: function () {
             danmaku.posttips(false);

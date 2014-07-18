@@ -23,7 +23,7 @@ addScript("https://rawgit.com/jabbany/CommentCoreLibrary/master/build/CommentCor
 addStyle("https://rawgit.com/jabbany/CommentCoreLibrary/master/build/style.css");
 
 addScript("https://rawgit.com/SUSTC/EryaDanmaku/master/ColorPicker.js");
-addScript("https://rawgit.com/SUSTC/EryaDanmaku/master/Danmaku.js");
+addScript("https://cdn.rawgit.com/SUSTC/EryaDanmaku/master/Danmaku.js");
 addStyle("https://cdn.rawgit.com/SUSTC/EryaDanmaku/master/ui.css");
 
 window.onblur = function () {};
@@ -156,6 +156,7 @@ function initDanmaku() {
     var that = this;
     var av_danmaku = new avDanmaku();
     data.videoId = this.ssid;
+    console.log(data);
     av_danmaku.save(data, {
       success: function(av_danmaku) {
         that.posttips(true);
