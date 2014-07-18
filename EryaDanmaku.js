@@ -94,27 +94,29 @@ function CommentLoader(url,xcm,mode,callback){
 }
 
 var EryaDanmaku = function(danmaku) {
-  var flashVars = $("#eryaPlayer").getPlayer().children.namedItem("flashvars").value;
-  var conf = JSON.parse(unescape(flashVars.split("&")[3]).substr(6));
-  var videoId = conf.currVideoInfo.videoId;
-  var episodeID = cur_video;
-  var flashVars = conf;
+  //var flashVars = $("#eryaPlayer").getPlayer().children.namedItem("flashvars").value;
+  //var conf = JSON.parse(unescape(flashVars.split("&")[3]).substr(6));
+  //var videoId = conf.currVideoInfo.videoId;
+  //var flashVars = conf;
 
-  var setEpisode = function(id) {
-    episodeID = id;
+  var episodeId = cur_video;
+  
+  var eryadanmaku = {
+    episodeId: episodeId
   };
 
-  //Global Hook
-  var goPlay_orig = goPlay;
-  goPlay = function(seriNum) {
-    goPlay_orig(seriNum);
-    setEpisode(cur_video);
-  };
+  eryadanmaku.setEpisode = function(id, callback) {
+    danmaku.stop();
 
-  setEpisode(cur_video);
+    var videoId = $("#videoId").val();
+    this.videoId = videoId;
+    this.episodeId = id;
+
+    danmaku.load(videoId, callback);
+  };
 
   //Constructed
-  return danmaku;
+  return eryadanmaku;
 };
 
 
@@ -122,54 +124,69 @@ var danmaku = null;
 
 //defer(EryaDanmaku);
 function initDanmaku() {
+  //初始化 AVOS Cloud
+  AV.initialize("9bfuau87qmvf42xobes7vg7f16kikk1gpgisvb36225mfwld", "1ah2yr74jdwksdep2i4wq0gy18sg01lkqt40epeuqhkde3kv");
+
   var elplayer = $('#eryaPlayer');
   var player = elplayer.getPlayer();
   //player.getPlaySecond();
   //player.playMovie();
 
-  Danmaku.prototype.biliload = function (url, callback) {
-      this.ssid = 0;
-
-      this.cm.clear();
-      this.start = 0;
-
-      CommentLoader(url, this.cm, 'bilibili');
+  Danmaku.prototype.loader = function (videoId, callback) {
+    //reload
+    var that = this;
+    var av_danmaku = AV.Object.extend("danmaku");
+    var query = new AV.Query(av_danmaku);
+    query.equalTo("videoId", videoId);
+    console.log('videoId', videoId);
+    query.find({
+      success: function(results) {
+        //danmaku.load();
+        that.cm.load(results);
+        callback();
+      },
+      error: function(err) {
+        callback(err);
+      }
+    });
   };
+
+  Danmaku.prototype.postdata = function (data) {
+    console.log(data);
+  };
+
   danmaku = new Danmaku($('#eryaPlayer'), $('.danmakubar'), function () {
     return player.getPlaySecond() * 1000;
   });
-  danmaku.biliload('http://comment.bilibili.com/1971287.xml', function () {
-    
-    var edanmaku = new EryaDanmaku(danmaku);
 
-    function checkPlayState() {
-      var playState = player.getPlayState();
-      if (playState == 2) {
-        danmaku.stop();
-      } else if (playState == 1) {
-        danmaku.resume();
-      }
+  var edanmaku = EryaDanmaku(danmaku);
+
+  function checkPlayState(err) {
+    if (err) {
+      return;
     }
-    checkPlayState();
-
-    elplayer.bind('onPlay', function (e, proTime) {
-      danmaku.resume();
-    });
-    elplayer.bind('onPause', function (e, proTime) {
+    var playState = player.getPlayState();
+    if (playState == 2) {
       danmaku.stop();
-    });
-    elplayer.bind('onMovieDrag', function (e, startTime, endTime, data) {
-      checkPlayState();
-    });
-    elplayer.bind('onStart', function (e, index, data) {
-      checkPlayState();
-    });
-  });
-  
+    } else if (playState == 1) {
+      danmaku.resume();
+    }
+  }
 
-  //初始化 AVOS Cloud
-  AV.initialize("9bfuau87qmvf42xobes7vg7f16kikk1gpgisvb36225mfwld", "1ah2yr74jdwksdep2i4wq0gy18sg01lkqt40epeuqhkde3kv");
-  
+  elplayer.bind('onPlay', function (e, proTime) {
+    danmaku.resume();
+  });
+  elplayer.bind('onPause', function (e, proTime) {
+    danmaku.stop();
+  });
+  elplayer.bind('onMovieDrag', function (e, startTime, endTime, data) {
+    checkPlayState();
+  });
+  elplayer.bind('onStart', function (e, index, data) {
+    edanmaku.setEpisode(index, checkPlayState);
+  });
+
+  edanmaku.setEpisode(currIndex, checkPlayState);
 }
 
 setTimeout(initDanmaku, 5000);

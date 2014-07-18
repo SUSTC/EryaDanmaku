@@ -49,6 +49,25 @@ Danmaku.prototype.dohide = function () {
     this.isshow() ? this.hide() : this.show();
 };
 
+Danmaku.prototype.postdata = function (cmsenddata) {
+    $.ajax({
+        type: 'POST',
+        url: '/comment.php?mod=danmaku&do=add&ssid=' + this.ssid,
+        dataType: 'json',
+        data: cmsenddata,
+        success: function (msg) {
+            if (msg == '0') {
+                danmaku.toolbar.find("#danmaku-tips").css('color', '#7BCA1C').fadeIn().text('发送弹幕成功').delay(2000).fadeOut();
+            } else {
+                danmaku.toolbar.find("#danmaku-tips").css('color', 'red').fadeIn().text('发送弹幕失败').delay(2000).fadeOut();
+            }
+        },
+        error: function () {
+            danmaku.toolbar.find("#danmaku-tips").css('color', 'red').fadeIn().text('发送弹幕失败').delay(2000).fadeOut();
+        }
+    });
+};
+
 Danmaku.prototype.post = function () {
     var text = this.toolbar.find("#id_danmaku").val();
     if (text != '') {
@@ -63,23 +82,12 @@ Danmaku.prototype.post = function () {
 
         color = this.colorpicker.color2int(color);
         var cmsenddata = { 'text': text, 'mode': mode, 'stime': stime, 'size': size, 'color': color };
-        $.ajax({
-            type: 'POST',
-            url: '/comment.php?mod=danmaku&do=add&ssid=' + this.ssid,
-            dataType: 'json',
-            data: cmsenddata,
-            success: function (msg) {
-                if (msg == '0') {
-                    danmaku.toolbar.find("#danmaku-tips").css('color', '#7BCA1C').fadeIn().text('发送弹幕成功').delay(2000).fadeOut();
-                } else {
-                    danmaku.toolbar.find("#danmaku-tips").css('color', 'red').fadeIn().text('发送弹幕失败').delay(2000).fadeOut();
-                }
-            },
-            error: function () {
-                danmaku.toolbar.find("#danmaku-tips").css('color', 'red').fadeIn().text('发送弹幕失败').delay(2000).fadeOut();
-            }
-        });
+        this.postdata(cmsenddata);
     }
+};
+
+Danmaku.prototype.loader = function (ssid, callback) {
+    CommentLoader('/comment.php?mod=danmaku&do=get&ssid=' + ssid, this.cm, false, callback);
 };
 
 Danmaku.prototype.load = function (ssid, callback) {
@@ -88,7 +96,7 @@ Danmaku.prototype.load = function (ssid, callback) {
     this.cm.clear();
     this.start = 0;
 
-    CommentLoader('/comment.php?mod=danmaku&do=get&ssid=' + ssid, this.cm, false, callback);
+    this.loader(ssid, callback);
 };
 
 Danmaku.prototype.play = function () {
