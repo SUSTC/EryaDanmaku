@@ -1,4 +1,15 @@
 
+.erya-danmaku {
+  position: absolute;
+  top: 0;
+  width: 841px;
+  height: 480px;
+}
+
+#black_background {
+  height: 560px;
+}
+
 /* 8.3.2 story show > danmakubar */
 .danmakubar {margin:5px auto;width:800px;height:28px;text-align:center;z-index:300;}
 .danmakubar input[type="text"] {width:340px;}

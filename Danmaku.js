@@ -22,10 +22,11 @@ addScript("https://cn.avoscloud.com/scripts/lib/av-0.3.4.min.js");
 addScript("https://rawgit.com/jabbany/CommentCoreLibrary/master/build/CommentCoreLibrary.js");
 addStyle("https://rawgit.com/jabbany/CommentCoreLibrary/master/build/style.css");
 
+addScript("https://rawgit.com/SUSTC/EryaDanmaku/master/ColorPicker.js");
 addStyle("https://rawgit.com/SUSTC/EryaDanmaku/master/ui.css");
 
 window.onblur = function () {};
-$('#eryaPlayer').prepend('<div class="erya-danmaku abp" id="player" style="position:absolute;top:0;width:841px;height:480px;">'
+$('#eryaPlayer').prepend('<div class="erya-danmaku abp" id="player">'
         + '<div id="c-region" style="display:none;">640x480</div>'
         + '<div id="commentCanvas" class="container"></div>'
         + '</div>');
