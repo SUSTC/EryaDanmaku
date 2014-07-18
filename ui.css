@@ -1,0 +1,29 @@
+
+/* 8.3.2 story show > danmakubar */
+.danmakubar {margin:5px auto;width:800px;height:28px;text-align:center;z-index:300;}
+.danmakubar input[type="text"] {width:340px;}
+.danmakubar input[type="button"] {height:28px;}
+.danmakubar label {float:left;display:inline-block;margin:5px;}
+.danmakubar .lefttools {float:left;padding:6px;}
+#danmaku-tips {display:none;}
+#danmaku-fontsize {width:80px;}
+#danmaku-mode {width:90px;}
+
+/* 8.3.2 story show > danmakubar > color_select */
+.color_select {
+  width:16px;
+  height:16px;
+  border:1px solid #ccc;
+  display:inline-block;
+  background-color:#ffffff;
+  text-align:left;
+}
+.color_select input[type="text"] {width:80px;}
+.color_picker {width:12px;height:12px;border:1px solid #ffffff;display:inline-block;}
+#color_container{
+  width:254px;
+  /*width:600px;*/
+  display:inline-block;
+  line-height:0px;
+}
+#current_color{width:40px;margin:5px 0;}

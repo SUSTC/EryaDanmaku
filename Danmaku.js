@@ -22,11 +22,38 @@ addScript("https://cn.avoscloud.com/scripts/lib/av-0.3.4.min.js");
 addScript("https://rawgit.com/jabbany/CommentCoreLibrary/master/build/CommentCoreLibrary.js");
 addStyle("https://rawgit.com/jabbany/CommentCoreLibrary/master/build/style.css");
 
+addStyle("https://rawgit.com/SUSTC/EryaDanmaku/master/ui.css");
+
 window.onblur = function () {};
-$('#eryaPlayer').prepend('<div class="erya abp" id="player" style="position:absolute;top:0;width:841px;height:480px;">'
+$('#eryaPlayer').prepend('<div class="erya-danmaku abp" id="player" style="position:absolute;top:0;width:841px;height:480px;">'
         + '<div id="c-region" style="display:none;">640x480</div>'
         + '<div id="commentCanvas" class="container"></div>'
         + '</div>');
+$('#eryaPlayer').prepend(
+'<div class="danmakubar">' +
+'  <label>弹幕:</label>' +
+'  <div class="lefttools"><div class="color_select" id="danmaku-fontcolor" title="文字颜色"></div></div>' +
+'  <select id="danmaku-fontsize">' +
+'      <option value="12">非常小</option>' +
+'      <option value="16">特小</option>' +
+'      <option value="18">小</option>' +
+'      <option value="25" selected>中</option>' +
+'      <option value="36">大</option>' +
+'      <option value="45">很大</option>' +
+'      <option value="64">特别大</option>' +
+'  </select>' +
+'  <select id="danmaku-mode">' +
+'      <option value="1" selected>顶端滚动</option>' +
+'      <option value="4">底端渐隐</option>' +
+'      <option value="5">顶端渐隐</option>' +
+'      <option value="6">逆向弹幕</option>' +
+'  </select>' +
+'  <input id="id_danmaku" type="text" onkeydown="if(event.keyCode==13) danmaku.post();" />' +
+'  <input id="danmaku-post" type="button" class="btn btn-small" value="发送" onclick="danmaku.post()" />' +
+'  <input id="danmaku-hide" type="button" class="btn btn-small" value="隐藏弹幕" onclick="danmaku.dohide()" />' +
+'  <input id="gal-auto" type="button" class="btn btn-small" value="自动" onclick="gal.doauto(this)" />' +
+'  <li id="danmaku-tips"></li>' +
+'</div>');
 
 /***********************
 * XMLParser
@@ -68,9 +95,6 @@ function defer(a) {
     defer(a)
   }, 50)
 }
-
-//player.getPlaySecond();
-//player.playMovie();
 
 var EryaDanmaku = function() {
   var danmaku = {};
@@ -156,19 +180,37 @@ var EryaDanmaku = function() {
   return danmaku;
 };
 
+var danmaku = null;
 //defer(EryaDanmaku);
 function initDanmaku() {
-  var danmaku = new EryaDanmaku();
-  danmaku.load('http://comment.bilibili.com/1971287.xml');
+  //初始化 AVOS Cloud
+  AV.initialize("9bfuau87qmvf42xobes7vg7f16kikk1gpgisvb36225mfwld", "1ah2yr74jdwksdep2i4wq0gy18sg01lkqt40epeuqhkde3kv");
+  var av_danmaku = AV.Object.extend("danmaku");
+  var query = new AV.Query(av_danmaku);
+  query.find({
+    success: function (results) {
+      console.log(results);
+    },
+    error: function (error) {
+      alert("Error: " + error.code + " " + error.message);
+    }
+  });
+  return;
+
+  danmaku = new EryaDanmaku();
+  //danmaku.load('http://comment.bilibili.com/1971287.xml');
 
   var elplayer = $('#eryaPlayer');
-  //var player = elplayer.getPlayer();
+  var player = elplayer.getPlayer();
+  //player.getPlaySecond();
+  //player.playMovie();
+
   function checkPlayState() {
-    var playState = elplayer.getPlayState();
+    var playState = player.getPlayState();
     if (playState == 2) {
       danmaku.stop();
     } else if (playState == 1) {
-      danmaku.time(elplayer.getPlaySecond());
+      danmaku.time(player.getPlaySecond());
     }
   }
   checkPlayState();
