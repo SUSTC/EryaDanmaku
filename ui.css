@@ -1,13 +1,13 @@
 
 .erya-danmaku {
-  position: absolute;
+  position: absolute !important;
   top: 0;
   width: 841px;
   height: 480px;
 }
 
-#black_background {
-  height: 560px;
+.black_background {
+  height: 560px !important;
 }
 
 /* 8.3.2 story show > danmakubar */

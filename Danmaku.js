@@ -30,7 +30,7 @@ $('#eryaPlayer').prepend('<div class="erya-danmaku abp" id="player">'
         + '<div id="c-region" style="display:none;">640x480</div>'
         + '<div id="commentCanvas" class="container"></div>'
         + '</div>');
-$('#eryaPlayer').prepend(
+$('#eryaPlayer').append(
 '<div class="danmakubar">' +
 '  <label>弹幕:</label>' +
 '  <div class="lefttools"><div class="color_select" id="danmaku-fontcolor" title="文字颜色"></div></div>' +
@@ -116,7 +116,9 @@ var EryaDanmaku = function() {
     danmaku.setEpisode(cur_video);
   };
 
-  var cm = new CommentManager($('#commentCanvas')[0]);
+  var danmakuStage = $('#commentCanvas');
+  this.stage = danmakuStage;
+  var cm = new CommentManager(danmakuStage[0]);
   cm.init();
 
   var tmr=0;
@@ -181,6 +183,24 @@ var EryaDanmaku = function() {
   return danmaku;
 };
 
+EryaDanmaku.prototype.isshow = function () {
+    return (this.stage.css('display') != 'none');
+};
+
+EryaDanmaku.prototype.show = function () {
+    this.stage.css('display', 'block');
+    this.toolbar.find('#danmaku-hide').val('隐藏弹幕');
+}
+
+EryaDanmaku.prototype.hide = function () {
+    this.stage.css('display', 'none');
+    this.toolbar.find('#danmaku-hide').val('显示弹幕');
+};
+
+EryaDanmaku.prototype.dohide = function () {
+    this.isshow() ? this.hide() : this.show();
+};
+
 var danmaku = null;
 //defer(EryaDanmaku);
 function initDanmaku() {
@@ -199,7 +219,7 @@ function initDanmaku() {
   return;
 
   danmaku = new EryaDanmaku();
-  //danmaku.load('http://comment.bilibili.com/1971287.xml');
+  danmaku.load('http://comment.bilibili.com/1971287.xml');
 
   var elplayer = $('#eryaPlayer');
   var player = elplayer.getPlayer();
