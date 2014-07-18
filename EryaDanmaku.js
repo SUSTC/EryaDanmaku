@@ -54,45 +54,10 @@ $('#eryaPlayer').append(
 '  <input id="id_danmaku" type="text" onkeydown="if(event.keyCode==13) danmaku.post();" />' +
 '  <input id="danmaku-post" type="button" class="btn btn-small" value="发送" onclick="danmaku.post()" />' +
 '  <input id="danmaku-hide" type="button" class="btn btn-small" value="隐藏弹幕" onclick="danmaku.dohide()" />' +
-'  <input id="gal-auto" type="button" class="btn btn-small" value="自动" onclick="gal.doauto(this)" />' +
 '  <li id="danmaku-tips"></li>' +
 '</div>');
 
-/***********************
-* XMLParser
-* Licensed Under the MIT License
-* Copyright (c) 2012 Jim Chen ( CQZ, Jabbany )
-************************/
-function CommentLoader(url,xcm,mode,callback){
-  if(mode == null)
-    mode = 'bilibili';
-  if (window.XMLHttpRequest){
-    xmlhttp=new XMLHttpRequest();
-  }
-  else{
-    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-  }
-  xmlhttp.open("GET",url,true);
-  xmlhttp.send();
-  var cm = xcm;
-  xmlhttp.onreadystatechange = function(){
-    if (xmlhttp.readyState==4 && xmlhttp.status==200){
-      if(mode == 'bilibili'){
-        if(navigator.appName == 'Microsoft Internet Explorer'){
-          var f = new ActiveXObject("Microsoft.XMLDOM");
-          f.async = false;
-          f.loadXML(xmlhttp.responseText);
-          cm.load(BilibiliParser(f, xmlhttp.responseText));
-        }else{
-          cm.load(BilibiliParser(xmlhttp.responseXML, xmlhttp.responseText));
-        }
-      }else if(mode == 'acfun'){
-        cm.load(AcfunParser(xmlhttp.responseText));
-      }
-      if (callback) callback();
-    }
-  }
-}
+var danmaku = null;
 
 var EryaDanmaku = function(danmaku) {
   //var flashVars = $("#eryaPlayer").getPlayer().children.namedItem("flashvars").value;
@@ -120,19 +85,17 @@ var EryaDanmaku = function(danmaku) {
   return eryadanmaku;
 };
 
-
-var danmaku = null;
-
 function AVOSParser(results) {
   var data = [];
   for (var i = 0; i < results.length; i++) {
     var object = results[i];
+    var color = '#' + parseInt(object.get('color')).toString(16);
     data[i] = {
       'text': object.get('text'),
       'mode': object.get('mode'),
       'stime': object.get('stime'),
       'size': object.get('size'),
-      'color': object.get('color') 
+      'color': color
     };
   }
   return data;
