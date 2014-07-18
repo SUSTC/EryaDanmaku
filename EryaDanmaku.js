@@ -22,8 +22,9 @@ addScript("https://cn.avoscloud.com/scripts/lib/av-0.3.4.min.js");
 addScript("https://rawgit.com/jabbany/CommentCoreLibrary/master/build/CommentCoreLibrary.js");
 addStyle("https://rawgit.com/jabbany/CommentCoreLibrary/master/build/style.css");
 
+addScript("https://rawgit.com/SUSTC/EryaDanmaku/master/jquery.artDialog.min.js");
 addScript("https://rawgit.com/SUSTC/EryaDanmaku/master/ColorPicker.js");
-addScript("https://cdn.rawgit.com/SUSTC/EryaDanmaku/master/Danmaku.js");
+addScript("https://rawgit.com/SUSTC/EryaDanmaku/master/Danmaku.js");
 addStyle("https://cdn.rawgit.com/SUSTC/EryaDanmaku/master/ui.css");
 
 window.onblur = function () {};
@@ -122,6 +123,21 @@ var EryaDanmaku = function(danmaku) {
 
 var danmaku = null;
 
+function AVOSParser(results) {
+  var data = [];
+  for (var i = 0; i < results.length; i++) {
+    var object = results[i];
+    data[i] = {
+      'text': object.get('text'),
+      'mode': object.get('mode'),
+      'stime': object.get('stime'),
+      'size': object.get('size'),
+      'color': object.get('color') 
+    };
+  }
+  return data;
+}
+
 //defer(EryaDanmaku);
 function initDanmaku() {
   //初始化 AVOS Cloud
@@ -142,8 +158,7 @@ function initDanmaku() {
     console.log('videoId', videoId);
     query.find({
       success: function(results) {
-        //danmaku.load();
-        that.cm.load(results);
+        that.cm.load(AVOSParser(results));
         callback();
       },
       error: function(err) {
@@ -156,7 +171,6 @@ function initDanmaku() {
     var that = this;
     var av_danmaku = new avDanmaku();
     data.videoId = this.ssid;
-    console.log(data);
     av_danmaku.save(data, {
       success: function(av_danmaku) {
         that.posttips(true);
