@@ -1,21 +1,19 @@
 
-function Danmaku(stageObject, toolObject) {
+function Danmaku(stageObject, toolObject, getPlayhead) {
     this.stage = stageObject.find('#commentCanvas');
     this.toolbar = toolObject;
 
     this.cm = new CommentManager(this.stage[0]);
 
-    this.ssid = 0;
     this.tmr = 0;
-    this.step = 0;
-    this.stepoffset = 60 * 60 * 12 * 1000;  //12小时，用于step切换
     this.start = 0;
+    this.getPlayhead = getPlayhead;
     this.playhead = 0;
 
     this.colorpicker = new ColorPicker(this, this.toolbar.find(".color_select"));
 
     this.run = function () {
-        this.playhead = new Date().getTime() - this.start + this.step * this.stepoffset;
+        this.playhead = this.getPlayhead();
         this.cm.time(this.playhead);
     };
 
@@ -105,13 +103,6 @@ Danmaku.prototype.play = function () {
     }, 100);
 };
 
-Danmaku.prototype.time = function (t) {
-    this.stop();
-    this.playhead = t * 1000 + this.step * this.stepoffset;
-    this.cm.time(this.playhead);
-    this.resume();
-};
-
 Danmaku.prototype.stop = function () {
     this.cm.stopTimer();
     clearInterval(this.tmr);
@@ -119,14 +110,8 @@ Danmaku.prototype.stop = function () {
 
 Danmaku.prototype.resume = function () {
     this.cm.startTimer();
-    this.start = new Date().getTime() - this.playhead;
     this.tmr = setInterval(function () {
         danmaku.run();
     }, 100);
 };
 
-//根据galgame进行的步骤来播放弹幕
-Danmaku.prototype.setstep = function (step) {
-    this.step = step;
-    this.start = new Date().getTime();
-};
