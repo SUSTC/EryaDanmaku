@@ -19,16 +19,16 @@ function addScript(url) {
 addScript("https://cn.avoscloud.com/scripts/lib/av-0.3.4.min.js");
 
 /* CommentCoreLibrary (//github.com/jabbany/CommentCoreLibrary) - Licensed under the MIT License */
-addScript("https://cdn.rawgit.com/jabbany/CommentCoreLibrary/master/build/CommentCoreLibrary.js");
-addStyle("https://cdn.rawgit.com/jabbany/CommentCoreLibrary/master/build/style.css");
+addScript("https://rawgit.com/jabbany/CommentCoreLibrary/master/build/CommentCoreLibrary.js");
+addStyle("https://rawgit.com/jabbany/CommentCoreLibrary/master/build/style.css");
 
 /* artDialog */
-addScript("https://cdn.rawgit.com/SUSTC/EryaDanmaku/master/jquery.artDialog.min.js");
-addStyle("https://cdn.rawgit.com/SUSTC/EryaDanmaku/master/simple.css");
+addScript("https://rawgit.com/SUSTC/EryaDanmaku/master/jquery.artDialog.min.js");
+addStyle("https://rawgit.com/SUSTC/EryaDanmaku/master/simple.css");
 
-addScript("https://cdn.rawgit.com/SUSTC/EryaDanmaku/master/ColorPicker.js");
-addScript("https://cdn.rawgit.com/SUSTC/EryaDanmaku/master/Danmaku.js");
-addStyle("https://cdn.rawgit.com/SUSTC/EryaDanmaku/master/ui.css");
+addScript("https://rawgit.com/SUSTC/EryaDanmaku/master/ColorPicker.js");
+addScript("https://rawgit.com/SUSTC/EryaDanmaku/master/Danmaku.js");
+addStyle("https://rawgit.com/SUSTC/EryaDanmaku/master/ui.css");
 
 window.onblur = function () {};
 $('#eryaPlayer').prepend('<div class="erya-danmaku abp" id="player">'
