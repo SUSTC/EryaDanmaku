@@ -16,7 +16,7 @@ function addScript(url) {
     container.appendChild(script);
 }
 
-if (!(Danmaku in window)) {
+if (typeof(window.Danmaku)==='undefined') {
 
     addScript("https://cn.avoscloud.com/scripts/lib/av-0.3.4.min.js");
 
