@@ -57,10 +57,12 @@ $('#eryaPlayer').append(
 '  <input id="id_danmaku" type="text" onkeydown="if(event.keyCode==13) danmaku.post();" />' +
 '  <input id="danmaku-post" type="button" class="btn btn-small" value="发送" onclick="danmaku.post()" />' +
 '  <input id="danmaku-hide" type="button" class="btn btn-small" value="隐藏弹幕" onclick="danmaku.dohide()" />' +
+'  <input id="danmaku-stage-hide" type="button" class="btn btn-small" value="X" />' +
 '  <li id="danmaku-tips"></li>' +
 '</div>');
 
 var danmaku = null;
+var edanmaku = null;
 
 var EryaDanmaku = function(danmaku) {
   //var flashVars = $("#eryaPlayer").getPlayer().children.namedItem("flashvars").value;
@@ -69,6 +71,7 @@ var EryaDanmaku = function(danmaku) {
   //var flashVars = conf;
 
   var episodeId = cur_video;
+  var stage_hide_btn = $('#danmaku-stage-hide');
   
   var eryadanmaku = {
     episodeId: episodeId
@@ -83,6 +86,16 @@ var EryaDanmaku = function(danmaku) {
 
     danmaku.load(videoId, callback);
   };
+
+  stage_hide_btn.click(function () {
+    if (stage_hide_btn.val() == 'X') {
+      stage_hide_btn.val('V');
+      $('.erya-danmaku').hide();
+    } else {
+      stage_hide_btn.val('X');
+      $('.erya-danmaku').show();
+    }
+  });
 
   //Constructed
   return eryadanmaku;
@@ -151,7 +164,7 @@ function initDanmaku() {
     return player.getPlaySecond() * 1000;
   });
 
-  var edanmaku = EryaDanmaku(danmaku);
+  edanmaku = EryaDanmaku(danmaku);
 
   function checkPlayState(err) {
     if (err) {
