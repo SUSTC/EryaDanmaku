@@ -192,6 +192,8 @@ function initDanmaku() {
   });
 
   edanmaku.setEpisode(currIndex, checkPlayState);
+  
+  ep=$("#eryaPlayer");setInterval(function(){ if(ep.getPlayState()==4) goPlay(cur_video+1);}, 1000);
 }
 
 setTimeout(initDanmaku, 5000);
