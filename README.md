@@ -2,6 +2,10 @@
 
 ------
 
+__WARNING__: This repo is now obsolete as Erya changed their system.
+
+------
+
 EryaDanmaku是一款可以让尔雅通识课视频上添加上弹幕的小插件。
 
 ------
